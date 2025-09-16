@@ -8,6 +8,9 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FertilizerController;
+use App\Http\Controllers\FertilizerAdminController;
+use App\Http\Controllers\UserReferenceController;
 
 Route::get('/', [PageController::class, 'index'])->name('index');
 
@@ -39,8 +42,11 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
     });
 });*/
 Route::middleware(['auth'])->group(function () {
+    Route::put('/profile/update', [UserReferenceController::class, 'updateProfile'])->name('profile.update')->middleware('auth');
+    Route::post('/references/store', [UserReferenceController::class, 'addressReferences'])->name('references.store')->middleware('auth');
     
 });
+
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboardAdmin'])->name('dashboardAdmin');
 
@@ -53,6 +59,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboardA', function () {
         return view('admin.dashboard');
     })->name('dash');
+
+    Route::resource('products', FertilizerAdminController::class);
+    Route::get('productos-eliminados', [FertilizerAdminController::class, 'delete'])->name('products.delete');
+    Route::put('productos/{id}/activar', [FertilizerAdminController::class, 'activate'])->name('products.activate');
+    Route::resource('user_references', UserReferenceController::class);
     
 });
 
@@ -67,6 +78,9 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/dashboard/datos-json', [DashboardController::class, 'datosJson'])->name('dashboard.datosJson');
     Route::get('/cambiarCU', [UserController::class, 'cambiarContrasenia'])->name('cambiarCU');
     Route::post('/actualizarC', [UserController::class, 'actualizarContrasenia'])->name('contrasenia');
+    Route::post('/destacado/{id}', [FertilizerController::class, 'starw'])->name('destacado');
+    Route::get('/verProductos', [FertilizerController::class, 'index'])->name('vista');
+    Route::resource('fertilizers', FertilizerController::class);
     
 });
 
@@ -76,4 +90,6 @@ Route::middleware(['auth', 'role:client'])->group(function () {
      Route::get('/client/dashboard', function () {
         return redirect()->route('index'); // Redirige a la vista index.blade.php
     });
+
+    
 });
