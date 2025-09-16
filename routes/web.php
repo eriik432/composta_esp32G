@@ -18,6 +18,8 @@ use App\Http\Controllers\PaymentUserVoucherController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\ContactMessageController;
+use Illuminate\Http\Request;
 
 
 
@@ -61,6 +63,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::get('/getUserG', [AdminController::class, 'dashboardAdminG'])->name('gU');
 
+    Route::resource('admins', AdminController::class);
+    Route::get('/getUserGe', [AdminController::class, 'index'])->name('admin.gestionUser');
+    Route::get('/cambiarCA', [AdminController::class, 'cambiarContrasenia'])->name('cambiarCA');
+    Route::post('/actualizarC', [AdminController::class, 'actualizarContrasenia'])->name('contrasenia');
+
     Route::get('/crear', function () {
         return view('create');
     })->name('verCrear');
@@ -92,6 +99,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // Formulario para editar un material existente
     Route::get('/materials/{material}/edit', [MaterialController::class, 'edit'])->name('materials.edit');
+
+    Route::resource('contacts', ContactMessageController::class);
+    Route::get('contact-deleted', [ContactMessageController::class, 'delete'])->name('contacts.delete');
+    Route::post('contact/{id}/activate', [ContactMessageController::class, 'activate'])->name('contacts.activate');
         
 });
 
