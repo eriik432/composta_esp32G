@@ -17,6 +17,7 @@ use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PaymentUserVoucherController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\MaterialController;
 
 
 
@@ -82,7 +83,16 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::resource('change_plans', PlanChangeRequestController::class); // 
     Route::get('change_plans-eliminados', [PlanChangeRequestController::class, 'delete'])->name('change_plans.delete');
     Route::put('change_plans/{id}/activar', [PlanChangeRequestController::class, 'activate'])->name('change_plans.activate');
-    
+    Route::get('/materials-compostaje', [MaterialController::class, 'index1'])->name('materials.index');
+    Route::post('/materials', [MaterialController::class, 'store'])->name('materials.store');
+
+    // Actualizar un material existente
+    Route::put('/materials/{material}', [MaterialController::class, 'update'])->name('materials.update');
+        Route::get('/materials/create', [MaterialController::class, 'create'])->name('materials.create');
+
+    // Formulario para editar un material existente
+    Route::get('/materials/{material}/edit', [MaterialController::class, 'edit'])->name('materials.edit');
+        
 });
 
 // Rutas para usuario común
@@ -111,6 +121,29 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::get('/comprobante/{id}', [PaymentUserVoucherController::class, 'edit'])->name('editVoucher');
     Route::put('/update/{id}', [PaymentUserVoucherController::class, 'update'])->name('updateC');
     Route::get('/deletes', [PaymentUserVoucherController::class, 'delete'])->name('deleteC');
+     Route::get('/materiales-compostaje', [MaterialController::class, 'index1'])->name('materiales.index');
+    Route::post('/materiales/filtrar', [MaterialController::class, 'filtrar'])->name('materials.filter');
+    Route::get('/proporciones', function () {
+    return view('user.education.proporciones');
+})->name('proporciones');
+
+
+   
+    Route::post('/ver-detalle', function (Request $request) {
+        $clasification = $request->input('clasification');
+
+        return match($clasification) {
+            'verde' => view('user.education.verde'),
+            'marron' => view('user.education.marron'),
+            'no_compostable' => view('user.education.no_compostable'),
+            default => back()->with('error', 'Clasificación desconocida.')
+        };
+    })->name('verDetalle');
+
+
+    Route::get('/select', function () {
+        return view('user.report.select');
+    })->name('select');
     
 });
 
