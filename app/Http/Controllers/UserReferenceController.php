@@ -46,7 +46,7 @@ class UserReferenceController extends Controller
     if ($request->hasFile('qr_image')) {
         $file = $request->file('qr_image');
         $filename = time() . '_' . $file->getClientOriginalName();
-        $destination = $_SERVER['DOCUMENT_ROOT'] . '/uploads/qr_images';
+        $destination = public_path() . '/uploads/qr_images';
 
         if (!file_exists($destination)) {
             mkdir($destination, 0777, true);
@@ -92,7 +92,7 @@ class UserReferenceController extends Controller
     if ($request->hasFile('qr_image')) {
         // Eliminar imagen anterior si existe
         if ($imagePath) {
-            $oldPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $imagePath;
+            $oldPath = public_path() . '/' . $imagePath;
             if (file_exists($oldPath)) {
                 unlink($oldPath);
             }
@@ -100,7 +100,7 @@ class UserReferenceController extends Controller
 
         $file = $request->file('qr_image');
         $filename = time() . '_' . $file->getClientOriginalName();
-        $destination = $_SERVER['DOCUMENT_ROOT'] . '/uploads/qr_images';
+        $destination = public_path() . '/uploads/qr_images';
 
         if (!file_exists($destination)) {
             mkdir($destination, 0777, true);
@@ -199,7 +199,7 @@ class UserReferenceController extends Controller
     if ($request->hasFile('qr_image')) {
         // Eliminar imagen anterior si existe
         if ($imagePath) {
-            $oldPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $imagePath;
+            $oldPath = public_path() . '/' . $imagePath;
             if (file_exists($oldPath)) {
                 unlink($oldPath);
             }
@@ -207,7 +207,7 @@ class UserReferenceController extends Controller
 
         $file = $request->file('qr_image');
         $filename = time() . '_' . $file->getClientOriginalName();
-        $destination = $_SERVER['DOCUMENT_ROOT'] . '/uploads/qr_images';
+        $destination = public_path() . '/uploads/qr_images';
 
         if (!file_exists($destination)) {
             mkdir($destination, 0777, true);

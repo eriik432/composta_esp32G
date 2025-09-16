@@ -51,7 +51,7 @@ class PaymentController extends Controller
             $fileName = time() . '_' . $request->file('receipt')->getClientOriginalName();
 
             // 📌 Guardar en la carpeta accesible públicamente
-            $destination = $_SERVER['DOCUMENT_ROOT'] . '/uploads/payment_products';
+            $destination = public_path() . '/uploads/payment_products';
 
             if (!file_exists($destination)) {
                 mkdir($destination, 0777, true);

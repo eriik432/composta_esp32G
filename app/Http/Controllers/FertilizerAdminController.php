@@ -69,7 +69,7 @@ class FertilizerAdminController extends Controller
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $destination = $_SERVER['DOCUMENT_ROOT'] . '/uploads/fertilizers';
+            $destination = public_path() . '/uploads/fertilizers';
 
             if (!file_exists($destination)) {
                 mkdir($destination, 0777, true);
@@ -163,7 +163,7 @@ class FertilizerAdminController extends Controller
         if ($request->hasFile('image')) {
             // Eliminar la imagen anterior si existe
             if ($producto->image) {
-                $oldPath = $_SERVER['DOCUMENT_ROOT'] . '/' . $producto->image;
+                $oldPath = public_path() . '/' . $producto->image;
                 if (file_exists($oldPath)) {
                     unlink($oldPath);
                 }
@@ -172,7 +172,7 @@ class FertilizerAdminController extends Controller
             // Subir la nueva imagen
             $file = $request->file('image');
             $filename = time() . '_' . $file->getClientOriginalName();
-            $destination = $_SERVER['DOCUMENT_ROOT'] . '/uploads/fertilizers';
+            $destination = public_path() . '/uploads/fertilizers';
 
             if (!file_exists($destination)) {
                 mkdir($destination, 0777, true);

@@ -182,7 +182,7 @@ class ReportController extends Controller
         ])->setPaper('A4', 'landscape');
 
         // 📌 Usar DOCUMENT_ROOT para que sea accesible públicamente
-        $destination = $_SERVER['DOCUMENT_ROOT'] . '/uploads/reports';
+        $destination = public_path() . '/uploads/reports';
 
         if (!file_exists($destination)) {
             mkdir($destination, 0777, true);
@@ -367,7 +367,7 @@ $doughnutChartUrl = 'https://quickchart.io/chart?c=' . urlencode(json_encode($do
 
 
     // 📌 7. Preparar carpeta para guardar PDF
-    $destination = $_SERVER['DOCUMENT_ROOT'] . '/uploads/reports';
+    $destination = public_path() . '/uploads/reports';
     if (!file_exists($destination)) {
         mkdir($destination, 0777, true);
     }

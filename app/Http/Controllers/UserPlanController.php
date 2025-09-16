@@ -101,7 +101,7 @@ public function procesarPago(Request $request, $id)
     $fileName = time() . '_' . $request->file('receipt')->getClientOriginalName();
 
     // 📌 Guardar en la carpeta accesible públicamente
-    $destination = $_SERVER['DOCUMENT_ROOT'] . '/uploads/change_plans';
+    $destination = public_path() . '/uploads/change_plans';
 
     if (!file_exists($destination)) {
         mkdir($destination, 0777, true);
