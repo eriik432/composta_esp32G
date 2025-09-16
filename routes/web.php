@@ -11,6 +11,14 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FertilizerController;
 use App\Http\Controllers\FertilizerAdminController;
 use App\Http\Controllers\UserReferenceController;
+use App\Http\Controllers\PlanChangeRequestController;
+use App\Http\Controllers\UserPlanController;
+use App\Http\Controllers\PlanController;
+use App\Http\Controllers\PaymentUserVoucherController;
+use App\Http\Controllers\SaleController;
+use App\Http\Controllers\PaymentController;
+
+
 
 Route::get('/', [PageController::class, 'index'])->name('index');
 
@@ -64,6 +72,16 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('productos-eliminados', [FertilizerAdminController::class, 'delete'])->name('products.delete');
     Route::put('productos/{id}/activar', [FertilizerAdminController::class, 'activate'])->name('products.activate');
     Route::resource('user_references', UserReferenceController::class);
+
+      Route::resource('plans', PlanController::class); // 
+    Route::get('planes-eliminados', [PlanController::class, 'delete'])->name('plans.delete');
+    Route::put('planes/{id}/activar', [PlanController::class, 'activate'])->name('plans.activate');
+
+
+    // CRUD tradicional para change_plans(Route::resource(...) solo registra 7 rutas estándar:index, create, store, show, edit, update, destroy)
+    Route::resource('change_plans', PlanChangeRequestController::class); // 
+    Route::get('change_plans-eliminados', [PlanChangeRequestController::class, 'delete'])->name('change_plans.delete');
+    Route::put('change_plans/{id}/activar', [PlanChangeRequestController::class, 'activate'])->name('change_plans.activate');
     
 });
 
@@ -81,6 +99,18 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     Route::post('/destacado/{id}', [FertilizerController::class, 'starw'])->name('destacado');
     Route::get('/verProductos', [FertilizerController::class, 'index'])->name('vista');
     Route::resource('fertilizers', FertilizerController::class);
+    Route::resource('sales', SaleController::class);
+    Route::view('/materiales', 'user.education.materials')->name('materials');
+    Route::view('/tips', 'user.education.tips')->name('tips');
+    Route::resource('uplans', UserPlanController::class);
+    Route::get('/planes/comprar/{id}', [UserPlanController::class, 'comprar'])->name('uplans.comprar');
+    Route::post('/planes/procesar-pago/{id}', [UserPlanController::class, 'procesarPago'])->name('planes.pago');
+    Route::get('/pago/recibo/{plan}/{user}', [UserPlanController::class, 'mostrarRecibo'])->name('mostrar');
+    Route::get('/pago/pdf/{id}', [UserPlanController::class, 'descargarPDF'])->name('payment.download');
+    Route::get('/deploy', [PaymentUserVoucherController::class, 'index'])->name('deployC');
+    Route::get('/comprobante/{id}', [PaymentUserVoucherController::class, 'edit'])->name('editVoucher');
+    Route::put('/update/{id}', [PaymentUserVoucherController::class, 'update'])->name('updateC');
+    Route::get('/deletes', [PaymentUserVoucherController::class, 'delete'])->name('deleteC');
     
 });
 
@@ -91,5 +121,8 @@ Route::middleware(['auth', 'role:client'])->group(function () {
         return redirect()->route('index'); // Redirige a la vista index.blade.php
     });
 
-    
+    Route::get('/payment/{product}', [PaymentController::class, 'showForm'])->name('payment.form');
+    Route::post('/payment/{product}', [PaymentController::class, 'processPayment'])->name('payment.process');
+    Route::get('/pago/recibo/{product}/{client}/{amount}', [PaymentController::class, 'mostrarRecibo'])->name('payment.receipt');
+    Route::get('/pago/pdf/{id}/{amount}', [PaymentController::class, 'descargarPDF'])->name('payment.downloadC');
 });
