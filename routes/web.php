@@ -12,6 +12,7 @@ use App\Http\Controllers\FertilizerController;
 use App\Http\Controllers\FertilizerAdminController;
 use App\Http\Controllers\UserReferenceController;
 use App\Http\Controllers\PlanChangeRequestController;
+use App\Http\Controllers\AdminPlanController;
 use App\Http\Controllers\UserPlanController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PaymentUserVoucherController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ContactMessageController;
 use Illuminate\Http\Request;
+use App\Http\Controllers\ReportController;
 
 
 
@@ -85,7 +87,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('planes-eliminados', [PlanController::class, 'delete'])->name('plans.delete');
     Route::put('planes/{id}/activar', [PlanController::class, 'activate'])->name('plans.activate');
 
-
+    Route::resource('user_plans', AdminPlanController::class);
     // CRUD tradicional para change_plans(Route::resource(...) solo registra 7 rutas estándar:index, create, store, show, edit, update, destroy)
     Route::resource('change_plans', PlanChangeRequestController::class); // 
     Route::get('change_plans-eliminados', [PlanChangeRequestController::class, 'delete'])->name('change_plans.delete');
@@ -157,6 +159,31 @@ Route::middleware(['auth', 'role:user'])->group(function () {
     })->name('select');
     
 });
+
+    Route::get('/reportes/lecturas', [ReportController::class, 'lecturas'])->name('reportes.lecturas');
+
+    // Reporte de ventas de composta
+    Route::get('/reportes/ventas', [ReportController::class, 'ventas'])->name('reportes.ventas');
+
+
+    // Reporte de lecturas de sensores (con filtro por día, semana o mes)
+    Route::get('/reportes/lecturas', [ReportController::class, 'filter'])->name('reportes.lecturas');
+
+    // (Opcional) Reporte de ventas de composta
+    Route::get('/reportes/ventas', [ReportController::class, 'sales'])->name('reportes.ventas');
+
+    Route::get('/reports/download', [ReportController::class, 'downloadPdf'])
+    ->name('reports.download');
+
+    Route::get('/reports/downloade', [ReportController::class, 'descargarReporte'])
+    ->name('reportes.descargar');
+    
+    Route::get('/rechazados', function () {
+    return view('user.voucher.delete');
+})->name('rechazadosU');
+
+    Route::get('/reportes/historialVentas', [ReportController::class, 'historialV'])->name('historialV');
+    Route::get('/reportes/historialLecturas', [ReportController::class, 'historialL'])->name('historialL');
 
 
 
